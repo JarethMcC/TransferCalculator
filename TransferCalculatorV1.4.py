@@ -196,7 +196,55 @@ def defenderCalculation(playerIndex):
 
 
 def goalkeeperCalculation(playerIndex):
-    print('Sorry forgot the values lol')
+    if int(listOfPlayers[playerIndex][7]) < 71:
+        print('Transfer fee: 5')
+    elif int(listOfPlayers[playerIndex][7]) == 71:
+        print('Transfer fee: 7.5')
+    elif int(listOfPlayers[playerIndex][7]) == 72:
+        print('Transfer fee: 10')
+    elif int(listOfPlayers[playerIndex][7]) == 73:
+        print('Transfer fee: 12.5')
+    elif int(listOfPlayers[playerIndex][7]) == 74:
+        print('Transfer fee: 15')
+    elif int(listOfPlayers[playerIndex][7]) == 75:
+        print('Transfer fee: 17.5')
+    elif int(listOfPlayers[playerIndex][7]) == 76:
+        print('Transfer fee: 20')
+    elif int(listOfPlayers[playerIndex][7]) == 77:
+        print('Transfer fee: 22.5')
+    elif int(listOfPlayers[playerIndex][7]) == 78:
+        print('Transfer fee: 25')
+    elif int(listOfPlayers[playerIndex][7]) == 79:
+        print('Transfer fee: 27.5')
+    elif int(listOfPlayers[playerIndex][7]) == 80:
+        print('Transfer fee: 30')
+    elif int(listOfPlayers[playerIndex][7]) == 81:
+        print('Transfer fee: 32.5')
+    elif int(listOfPlayers[playerIndex][7]) == 82:
+        print('Transfer fee: 35')
+    elif int(listOfPlayers[playerIndex][7]) == 83:
+        print('Transfer fee: 37.5')
+    elif int(listOfPlayers[playerIndex][7]) == 84:
+        print('Transfer fee: 40')
+    elif int(listOfPlayers[playerIndex][7]) == 85:
+        print('Transfer fee: 42.5')
+    elif int(listOfPlayers[playerIndex][7]) == 86:
+        print('Transfer fee: 45')
+    elif int(listOfPlayers[playerIndex][7]) == 87:
+        print('Transfer fee: 47.5')
+    elif int(listOfPlayers[playerIndex][7]) == 88:
+        print('Transfer fee: 50')
+    elif int(listOfPlayers[playerIndex][7]) == 89:
+        print('Transfer fee: 52.5')
+    elif int(listOfPlayers[playerIndex][7]) == 90:
+        print('Transfer fee: 55')
+    elif int(listOfPlayers[playerIndex][7]) == 91:
+        print('Transfer fee: 57.5')
+    elif int(listOfPlayers[playerIndex][7]) == 92:
+        print('Transfer fee: 60')
+    elif int(listOfPlayers[playerIndex][7]) == 94:
+        print('Transfer fee: 62.5')
+
     spacer()
 
 
