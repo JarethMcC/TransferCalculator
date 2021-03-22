@@ -2,11 +2,13 @@
 
 import math
 
+
 listOfPlayers = []
 listHeadings = ['NAME', 'CLUB', 'AGE', 'HEIGHT', 'POSITION', 'WF ', 'SM', 'OVRL', 'PACE', 'SHOT', 'PASS', 'DRIB', 'DFND', 'PHYS']
 columnOrder = [7, 8, 9, 10, 11, 12, 13, 5, 6]
 
 
+# Open and read the player file line by line into a list and append the list to the listOfPlayers array
 playerFile = open('FIFA21PlayerFile.txt', 'r', encoding='utf-8')
 lines = playerFile.readlines()
 for l in lines:
@@ -14,6 +16,7 @@ for l in lines:
     listOfPlayers.append(asList)
 
 
+# While loop menu to take user input for what they would like to do
 def main():
     loop = True
     while loop == True:
@@ -38,15 +41,19 @@ def main():
             print('Please enter a valid option')
 
 
+# Takes the player information and prints it to the console in a properly formatted fashion
 def playersFormatted(playerIndex):
     headingsFormat =  ''
     playersFormat = ''
+    # Print the players name
     print(listOfPlayers[playerIndex][0])
     print('_'*66)
     for i in range(1):
+        # Print in order of pre-determined column order
         for i in columnOrder:
             listLength = len(listHeadings[i]) 
             playerLength = len(str(listOfPlayers[playerIndex][i]))
+            # Determines how many spaces it is to the nearest tab for top and bottom row and makes sure that columns are lined up
             if listLength >= playerLength:
                 difference = listLength - playerLength
                 afterLongest = 8 - (listLength % 8)
@@ -64,10 +71,12 @@ def playersFormatted(playerIndex):
     print('_'*66)
 
 
+# Provides some formatting to differentiate between players
 def spacer():
     print('_'*120)
 
 
+# Checks the position in the array that holds the player position and runs the correct function per the player
 def positionCheck(i):
     if listOfPlayers[i][4] == 'CM' or listOfPlayers[i][4] == 'RM' or listOfPlayers[i][4] == 'CAM' or listOfPlayers[i][4] == 'CDM' or listOfPlayers[i][4] == 'LM':
         midfielderCalculation(i)
@@ -79,6 +88,7 @@ def positionCheck(i):
         goalkeeperCalculation(i)
 
 
+# Allows the user to search for a player per specific stats
 def searchStats():
     loop = True
     while loop == True:
@@ -96,6 +106,8 @@ def searchStats():
             weakFoot = input('Weak Foot: ')
             skillMoves = input('Skill Moves: ')
             spacer()
+            # Checks each user input to see if there is a player(s) that matches and then runs the correct functions to format the player(s) if there are
+            # Reversed range so that it prints the highest overall player last as this is probably the most relevant
             for i in reversed(range(len(listOfPlayers))):
                 if listOfPlayers[i][7] >= overall and listOfPlayers[i][8] >=pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
                     playerFound = True
@@ -107,6 +119,7 @@ def searchStats():
                 spacer()
 
 
+# Allows the user to search for a player by name
 def searchPlayer():
     loop = True
     while loop == True:
@@ -116,6 +129,7 @@ def searchPlayer():
         if searchInput.upper() == '':
             loop = False
         else:
+            # Reversed range so that it prints the highest overall player last as this is probably the most relevant
             for i in reversed(range(len(listOfPlayers))):
                 if searchInput in listOfPlayers[i][0]:
                     playerFound = True
@@ -127,6 +141,7 @@ def searchPlayer():
                 spacer()
 
 
+# Allows the user to search by club
 def searchClub():
     loop = True
     while loop == True:
@@ -136,6 +151,7 @@ def searchClub():
         if searchInput.upper() == '':
             loop = False
         else:
+            # Reversed range so that it prints the highest overall player last as this is probably the most relevant
             for i in reversed(range(len(listOfPlayers))):
                 if searchInput in listOfPlayers[i][1]:
                     playerFound = True
@@ -147,6 +163,7 @@ def searchClub():
                 spacer()
 
 
+# Calculates the player value if they are a midfielder
 def midfielderCalculation(playerIndex):
     pace = float(listOfPlayers[playerIndex][8]) * 2
     shooting = float(listOfPlayers[playerIndex][9]) * 1.5
@@ -163,6 +180,7 @@ def midfielderCalculation(playerIndex):
     spacer()
 
 
+# Calculates the player value if they are an attacker
 def attackerCalculation(playerIndex):
     pace = float(listOfPlayers[playerIndex][8]) * 2
     shooting = float(listOfPlayers[playerIndex][9]) * 2
@@ -179,6 +197,7 @@ def attackerCalculation(playerIndex):
     spacer()
 
 
+# Calculates the player value if they are a defender
 def defenderCalculation(playerIndex):
     pace = float(listOfPlayers[playerIndex][8]) * 2
     shooting = float(listOfPlayers[playerIndex][9]) * 0.5
@@ -195,6 +214,7 @@ def defenderCalculation(playerIndex):
     spacer()
 
 
+# Calculates the player value if they are a goalkeeper
 def goalkeeperCalculation(playerIndex):
     if int(listOfPlayers[playerIndex][7]) < 71:
         print('Transfer fee: 5')
@@ -244,10 +264,10 @@ def goalkeeperCalculation(playerIndex):
         print('Transfer fee: 60')
     elif int(listOfPlayers[playerIndex][7]) == 94:
         print('Transfer fee: 62.5')
-
     spacer()
 
 
+# Checks the overall rating of the player and applies a multiplier based on the overall rating that each player has
 def ratingMultiplier(playerIndex):   
     if int(listOfPlayers[playerIndex][7]) < 71:
         return float(1)
