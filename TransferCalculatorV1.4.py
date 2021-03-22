@@ -34,7 +34,7 @@ def main():
             elif searchInput.upper() == 'STATS':
                 searchStats()
         elif menuOption.upper().strip() == 'ADD':
-            print('Sorry, this menu option has yet to be added')
+            addPlayer()
         elif menuOption.upper().strip() == 'QUIT':
             exit()
         else:
@@ -161,6 +161,33 @@ def searchClub():
                 spacer()
                 print('Player not found')
                 spacer()
+
+
+# Allows the user to add a new player
+def addPlayer():
+    with open('FIFA21PlayerFile.txt', 'a') as writeFile:
+        loop = True
+        while loop == True:
+            playerFound = False
+            name = input('Input the name of the new player press enter to quit: ')
+            if name.upper() == '':
+                loop = False
+            else:
+                club = input('Club: ')
+                age = input('Age: ')
+                height = input('Height: ')
+                position = input('Position: ')
+                weakFoot = input('Weak Foot: ')
+                skillMoves = input('Skill Moves: ')
+                overall = input('Overall: ')
+                pace = input('Pace: ')
+                shooting = input('Shooting: ')
+                passing = input('Passing: ')
+                dribbling = input('Dribbling: ')
+                defending = input('Defending: ')
+                physical = input('Physical: ')
+                writeFile.write(name + ',' + club + ',' + age + ',' + height + ',' + position + ',' + weakFoot + ',' + skillMoves + ',' + overall + ',' + pace + ',' + shooting + ',' + passing + ',' + dribbling + ',' + defending + ',' + physical) 
+                print('Player has been added!')
 
 
 # Calculates the player value if they are a midfielder
