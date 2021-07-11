@@ -23,7 +23,8 @@ def main():
         spacer()
         menuOption = input('Type \'Search\' if you wish to search for a player \n'
         'Type \'Add\' if you wish to add a player\n'
-        'Type \'Quit\' to exit\n')
+        'Type \'Quit\' to exit\n'
+        'Type \'Team Pricing\' to get team pricing\n')
         spacer()
         if menuOption.upper().strip() == 'SEARCH':
             searchInput = input('Would you like to search by player, club or stats? Press enter to go back: ')
@@ -35,6 +36,8 @@ def main():
                 searchStats()
         elif menuOption.upper().strip() == 'ADD':
             addPlayer()
+        elif menuOption.upper().strip() == 'TEAM PRICING':
+            teamPricing()
         elif menuOption.upper().strip() == 'QUIT':
             exit()
         else:
@@ -46,8 +49,9 @@ def playersFormatted(playerIndex):
     headingsFormat =  ''
     playersFormat = ''
     # Print the players name
-    print(listOfPlayers[playerIndex][0])
-    print('_'*66)
+    print(listOfPlayers[playerIndex][0] + "   /   " + listOfPlayers[playerIndex][4] + "   /   " + listOfPlayers[playerIndex][1])
+    #print('_'*66)
+    print()
     for i in range(1):
         # Print in order of pre-determined column order
         for i in columnOrder:
@@ -68,7 +72,8 @@ def playersFormatted(playerIndex):
                 playersFormat += listOfPlayers[playerIndex][i] + '\t'
     print(headingsFormat)
     print(playersFormat)
-    print('_'*66)
+    #print('_'*66)
+    print()
 
 
 # Provides some formatting to differentiate between players
@@ -79,24 +84,45 @@ def spacer():
 # Checks the position in the array that holds the player position and runs the correct function per the player
 def positionCheck(i):
     if listOfPlayers[i][4] == 'CM' or listOfPlayers[i][4] == 'RM' or listOfPlayers[i][4] == 'CAM' or listOfPlayers[i][4] == 'CDM' or listOfPlayers[i][4] == 'LM':
-        midfielderCalculation(i)
+         return midfielderCalculation(i)
     elif listOfPlayers[i][4] == 'LB' or listOfPlayers[i][4] == 'CB' or listOfPlayers[i][4] == 'RB' or listOfPlayers[i][4] == 'LWB' or listOfPlayers[i][4] == 'RWB':
-        defenderCalculation(i)
+        return defenderCalculation(i)
     elif listOfPlayers[i][4] == 'ST' or listOfPlayers[i][4] == 'LW' or listOfPlayers[i][4] == 'RW' or listOfPlayers[i][4] == 'CF':
-        attackerCalculation(i)
+        return attackerCalculation(i)
     elif listOfPlayers[i][4] == 'GK':
-        goalkeeperCalculation(i)
+        return goalkeeperCalculation(i)
+
+
+def teamPricing():
+    premTeams = ['Sheffield United', 'West Brom', 'Fulham', 'Burnley', 'Brighton & Hove Albion', 'Southampton',
+                 'Crystal Palace', 'Wolverhampton Wanderers',
+                 'Newcastle United', 'Aston Villa', 'Leeds United', 'Everton', 'Arsenal', 'Tottenham Hotspur',
+                 'West Ham United', 'Chelsea', 'Liverpool',
+                 'Leicester City', 'Manchester United', 'Manchester City']
+    minOverall = input('minOverall: ')
+    for e in range(len(premTeams)):
+        teamTotalPrice = 0
+        for i in reversed(range(len(listOfPlayers))):
+            if listOfPlayers[i][1] == premTeams[e] and listOfPlayers[i][7] >= minOverall:
+                playerPrice = positionCheck(i)
+                teamTotalPrice += playerPrice
+                print(premTeams[e], ': ', teamTotalPrice)
 
 
 # Allows the user to search for a player per specific stats
 def searchStats():
     loop = True
+    premTeams = ['Sheffield United', 'West Brom', 'Fulham', 'Burnley', 'Brighton & Hove Albion', 'Southampton', 'Crystal Palace', 'Wolverhampton Wanderers',
+                 'Newcastle United', 'Aston Villa', 'Leeds United', 'Everton', 'Arsenal', 'Tottenham Hotspur', 'West Ham United', 'Chelsea', 'Liverpool',
+                 'Leicester City', 'Manchester United', 'Manchester City']
     while loop == True:
         playerFound = False
-        overall = input('Overall or press enter to quit: ')
-        if overall.upper() == '':
+        maxOverall = input('Max overall or press enter to quit: ')
+        if maxOverall.upper() == '':
             loop = False
         else:
+            minOverall = input('Minimum overall: ')
+            position = input('Position(GK, DEF, MID, ATT): ')
             pace = input('Pace: ')
             shooting = input('Shooting: ')
             passing = input('Passing: ')
@@ -105,14 +131,101 @@ def searchStats():
             physical = input('Physical: ')
             weakFoot = input('Weak Foot: ')
             skillMoves = input('Skill Moves: ')
+            premierLeague = input('Premier league(Enter for yes, no for no): ')
             spacer()
             # Checks each user input to see if there is a player(s) that matches and then runs the correct functions to format the player(s) if there are
             # Reversed range so that it prints the highest overall player last as this is probably the most relevant
-            for i in reversed(range(len(listOfPlayers))):
-                if listOfPlayers[i][7] >= overall and listOfPlayers[i][8] >=pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
-                    playerFound = True
-                    playersFormatted(i)
-                    positionCheck(i)
+            if premierLeague.upper() == 'NO':
+                if position.upper() == 'GK':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][8] >= pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'GK':
+                                playerFound = True
+                                playersFormatted(i)
+                                print(positionCheck(i))
+                                spacer()
+                if position.upper() == 'DEF':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][8] >= pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'CB' or listOfPlayers[i][4] == 'RB' or listOfPlayers[i][4] == 'LB' or listOfPlayers[i][4] == 'LWB' or listOfPlayers[i][4] == 'RWB':
+                                playerFound = True
+                                playersFormatted(i)
+                                print(positionCheck(i))
+                                spacer()
+                if position.upper() == 'MID':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][8] >= pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'CM' or listOfPlayers[i][4] == 'LM' or listOfPlayers[i][4] == 'RM' or \
+                            listOfPlayers[i][4] == 'CAM' or listOfPlayers[i][4] == 'CDM':
+                                playerFound = True
+                                playersFormatted(i)
+                                print(positionCheck(i))
+                                spacer()
+                if position.upper() == 'ATT':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][8] >= pace and listOfPlayers[i][9] >=shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'ST' or listOfPlayers[i][4] == 'LW' or listOfPlayers[i][4] == 'RW' or \
+                            listOfPlayers[i][4] == 'CF':
+                                playerFound = True
+                                playersFormatted(i)
+                                print(positionCheck(i))
+                                spacer()
+            else:
+                if position.upper() == 'GK':
+                    for i in reversed(range(len(listOfPlayers))):
+                         if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][8] >= pace and listOfPlayers[i][9] >= shooting and listOfPlayers[i][10] >= passing and listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'GK':
+                                for e in range(len(premTeams)):
+                                    if listOfPlayers[i][1] == premTeams[e]:
+                                        playerFound = True
+                                        playersFormatted(i)
+                                        print('Value: ', positionCheck(i))
+                                        spacer()
+                if position.upper() == 'DEF':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][
+                            8] >= pace and listOfPlayers[i][9] >= shooting and listOfPlayers[i][10] >= passing and \
+                                listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and \
+                                listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and \
+                                listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'CB' or listOfPlayers[i][4] == 'RB' or listOfPlayers[i][4] == 'LB' or listOfPlayers[i][4] == 'LWB' or listOfPlayers[i][4] == 'RWB':
+                                for e in range(len(premTeams)):
+                                    if listOfPlayers[i][1] == premTeams[e]:
+                                        playerFound = True
+                                        playersFormatted(i)
+                                        print('Value: ', positionCheck(i))
+                                        spacer()
+                if position.upper() == 'MID':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][
+                            8] >= pace and listOfPlayers[i][9] >= shooting and listOfPlayers[i][10] >= passing and \
+                                listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and \
+                                listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and \
+                                listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'CM' or listOfPlayers[i][4] == 'LM' or listOfPlayers[i][
+                                4] == 'RM' or \
+                                    listOfPlayers[i][4] == 'CAM' or listOfPlayers[i][4] == 'CDM':
+                                for e in range(len(premTeams)):
+                                    if listOfPlayers[i][1] == premTeams[e]:
+                                        playerFound = True
+                                        playersFormatted(i)
+                                        print('Value: ', positionCheck(i))
+                                        spacer()
+                if position.upper() == 'ATT':
+                    for i in reversed(range(len(listOfPlayers))):
+                        if listOfPlayers[i][7] >= minOverall and listOfPlayers[i][7] <= maxOverall and listOfPlayers[i][
+                            8] >= pace and listOfPlayers[i][9] >= shooting and listOfPlayers[i][10] >= passing and \
+                                listOfPlayers[i][11] >= dribbling and listOfPlayers[i][12] >= defending and \
+                                listOfPlayers[i][13] >= physical and listOfPlayers[i][5] >= weakFoot and \
+                                listOfPlayers[i][6] >= skillMoves:
+                            if listOfPlayers[i][4] == 'ST' or listOfPlayers[i][4] == 'LW' or listOfPlayers[i][
+                                4] == 'RW' or listOfPlayers[i][4] == 'CF':
+                                for e in range(len(premTeams)):
+                                    if listOfPlayers[i][1] == premTeams[e]:
+                                        playerFound = True
+                                        playersFormatted(i)
+                                        print('Value: ', positionCheck(i))
+                                        spacer()
             if playerFound  == False:
                 spacer()
                 print('No players found')
@@ -124,17 +237,18 @@ def searchPlayer():
     loop = True
     while loop == True:
         playerFound = False
-        searchInput = input('Enter the full name of the player you would like to search for (capitals are important) or press enter to quit: ')
+        searchInput = input('Enter the full name of the player you would like to search for or press enter to quit: ')
         spacer()
         if searchInput.upper() == '':
             loop = False
         else:
             # Reversed range so that it prints the highest overall player last as this is probably the most relevant
             for i in reversed(range(len(listOfPlayers))):
-                if searchInput in listOfPlayers[i][0]:
+                if searchInput.upper() in listOfPlayers[i][0].upper():
                     playerFound = True
                     playersFormatted(i)
-                    positionCheck(i)
+                    print('Value: ', positionCheck(i))
+                    spacer()
             if playerFound  == False:
                 spacer()
                 print('Player not found')
@@ -146,17 +260,18 @@ def searchClub():
     loop = True
     while loop == True:
         playerFound = False
-        searchInput = input('Enter the full name of the club you would like to search for (capital are important) or press enter to quit: ')
+        searchInput = input('Enter the full name of the club you would like to search for or press enter to quit: ')
         spacer()
         if searchInput.upper() == '':
             loop = False
         else:
             # Reversed range so that it prints the highest overall player last as this is probably the most relevant
             for i in reversed(range(len(listOfPlayers))):
-                if searchInput in listOfPlayers[i][1]:
+                if searchInput.upper() in listOfPlayers[i][1].upper():
                     playerFound = True
                     playersFormatted(i)
-                    positionCheck(i)
+                    print('Value: ', positionCheck(i))
+                    spacer()
             if playerFound  == False:
                 spacer()
                 print('Player not found')
@@ -203,7 +318,7 @@ def midfielderCalculation(playerIndex):
     weakFoot = float(listOfPlayers[playerIndex][5]) * 20
     multiplier = ratingMultiplier(playerIndex)
     total = ((pace + shooting + passing + dribbling + defence + physical + height + skillMoves + weakFoot) / 40) * multiplier
-    print('Transfer fee:', round(total, 2))
+    return round(total, 2)
     spacer()
 
 
@@ -220,7 +335,7 @@ def attackerCalculation(playerIndex):
     weakFoot = float(listOfPlayers[playerIndex][5]) * 20
     multiplier = ratingMultiplier(playerIndex)
     total = ((pace + shooting + passing + dribbling + defence + physical + height + skillMoves + weakFoot) / 40) * multiplier
-    print('Transfer fee:', round(total, 2))
+    return round(total, 2)
     spacer()
 
 
@@ -237,60 +352,64 @@ def defenderCalculation(playerIndex):
     weakFoot = float(listOfPlayers[playerIndex][5]) * 20
     multiplier = ratingMultiplier(playerIndex)
     total = ((pace + shooting + passing + dribbling + defence + physical + height + skillMoves + weakFoot) / 40) * multiplier
-    print('Transfer fee:', round(total, 2))
+    return round(total, 2)
     spacer()
 
 
 # Calculates the player value if they are a goalkeeper
 def goalkeeperCalculation(playerIndex):
     if int(listOfPlayers[playerIndex][7]) < 71:
-        print('Transfer fee: 5')
+        return 5
     elif int(listOfPlayers[playerIndex][7]) == 71:
-        print('Transfer fee: 7.5')
+        return 7.5
     elif int(listOfPlayers[playerIndex][7]) == 72:
-        print('Transfer fee: 10')
+        return 10
     elif int(listOfPlayers[playerIndex][7]) == 73:
-        print('Transfer fee: 12.5')
+        return 12.5
     elif int(listOfPlayers[playerIndex][7]) == 74:
-        print('Transfer fee: 15')
+        return 15
     elif int(listOfPlayers[playerIndex][7]) == 75:
-        print('Transfer fee: 17.5')
+        return 17.5
     elif int(listOfPlayers[playerIndex][7]) == 76:
-        print('Transfer fee: 20')
+        return 20
     elif int(listOfPlayers[playerIndex][7]) == 77:
-        print('Transfer fee: 22.5')
+        return 22.5
     elif int(listOfPlayers[playerIndex][7]) == 78:
-        print('Transfer fee: 25')
+        return 25
     elif int(listOfPlayers[playerIndex][7]) == 79:
-        print('Transfer fee: 27.5')
+        return 27.5
     elif int(listOfPlayers[playerIndex][7]) == 80:
-        print('Transfer fee: 30')
+        return 30
     elif int(listOfPlayers[playerIndex][7]) == 81:
-        print('Transfer fee: 32.5')
+        return 32.5
     elif int(listOfPlayers[playerIndex][7]) == 82:
-        print('Transfer fee: 35')
+        return 35
     elif int(listOfPlayers[playerIndex][7]) == 83:
-        print('Transfer fee: 37.5')
+        return 37.5
     elif int(listOfPlayers[playerIndex][7]) == 84:
-        print('Transfer fee: 40')
+        return 40
     elif int(listOfPlayers[playerIndex][7]) == 85:
-        print('Transfer fee: 42.5')
+        return 42.5
     elif int(listOfPlayers[playerIndex][7]) == 86:
-        print('Transfer fee: 45')
+        return 45
     elif int(listOfPlayers[playerIndex][7]) == 87:
-        print('Transfer fee: 47.5')
+        return 47.5
     elif int(listOfPlayers[playerIndex][7]) == 88:
-        print('Transfer fee: 50')
+        return 50
     elif int(listOfPlayers[playerIndex][7]) == 89:
-        print('Transfer fee: 52.5')
+        return 52.5
     elif int(listOfPlayers[playerIndex][7]) == 90:
-        print('Transfer fee: 55')
+        return 55
     elif int(listOfPlayers[playerIndex][7]) == 91:
-        print('Transfer fee: 57.5')
+        return 57.5
     elif int(listOfPlayers[playerIndex][7]) == 92:
-        print('Transfer fee: 60')
+        return 60
+    elif int(listOfPlayers[playerIndex][7]) == 93:
+        return 62.5
     elif int(listOfPlayers[playerIndex][7]) == 94:
-        print('Transfer fee: 62.5')
+        return 65
+    elif int(listOfPlayers[playerIndex][7]) >= 95:
+        return 70
     spacer()
 
 
